@@ -1,0 +1,10 @@
+{
+    "name": "nzta/silverstripe-workplace",
+    "description": "Provides the integration with Workplace facebook service",
+    "type": "silverstripe-module",
+    "keywords": [
+        "silverstripe",
+        "facebook"
+    ],
+    "license": "BSD-3-Clause"
+}
