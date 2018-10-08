@@ -1,0 +1,14 @@
+{
+    "name": "nzta/silverstripe-workplace",
+    "description": "Provides the integration with Workplace facebook service",
+    "type": "silverstripe-module",
+    "keywords": [
+        "silverstripe",
+        "facebook"
+    ],
+    "require": {
+        "silverstripe/framework": "^3.1",
+        "symbiote/silverstripe-queuedjobs": "^2.8"
+    },
+    "license": "BSD-3-Clause"
+}
