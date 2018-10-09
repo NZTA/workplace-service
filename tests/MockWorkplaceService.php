@@ -1,4 +1,9 @@
 <?php
+namespace NZTA\Workplace\Test;
+
+use Phake;
+use stdClass;
+use NZTA\Workplace\Gateways\WorkplaceGateway;
 
 class MockWorkplaceService
 {
@@ -30,22 +35,27 @@ class MockWorkplaceService
      */
     public function getGateway()
     {
-        $gateway = Phockito::mock('WorkplaceGateway');
+        $gateway = Phake::mock(WorkplaceGateway::class);
 
-        Phockito::when($gateway->getHomePagePosts($this->groupID, $this->limit))
-            ->return($this->getMockResponse_homepagePosts());
+        Phake::when($gateway)
+            ->getHomepagePosts($this->groupID, $this->limit)
+            ->thenReturn($this->getMockResponse_homepagePosts());
 
-        Phockito::when($gateway->getPostComments($this->postID, $this->limit, 'chronological'))
-            ->return($this->getMockResponse_postComments('chronological'));
+        Phake::when($gateway)
+            ->getPostComments($this->postID, $this->limit, 'chronological')
+            ->thenReturn($this->getMockResponse_postComments('chronological'));
 
-        Phockito::when($gateway->getPostComments($this->postID, $this->limit, 'reverse_chronological'))
-            ->return($this->getMockResponse_postComments('reverse_chronological'));
+        Phake::when($gateway)
+            ->getPostComments($this->postID, $this->limit, 'reverse_chronological')
+            ->thenReturn($this->getMockResponse_postComments('reverse_chronological'));
 
-        Phockito::when($gateway->getAllGroups())
-            ->return($this->getMockResponse_allGroups());
+        Phake::when($gateway)
+            ->getAllGroups()
+            ->thenReturn($this->getMockResponse_allGroups());
 
-        Phockito::when($gateway->getWorkplaceProfileInfo($this->userIDs))
-            ->return($this->getMockResponse_workplaceProfileInfo());
+        Phake::when($gateway)
+            ->getWorkplaceProfileInfo($this->userIDs)
+            ->thenReturn($this->getMockResponse_workplaceProfileInfo());
 
         return $gateway;
     }

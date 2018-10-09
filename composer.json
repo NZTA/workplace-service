@@ -10,7 +10,7 @@
         "silverstripe/framework": "^4.2",
         "symbiote/silverstripe-queuedjobs": "^4.2",
         "guzzlehttp/guzzle": "^6.3",
-        "hafriedlander/phockito": "^1.0"
+        "phake/phake": "^2.3"
     },
     "license": "BSD-3-Clause"
 }

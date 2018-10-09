@@ -128,7 +128,7 @@ class WorkplaceService
      * @param int $postId
      * @param int|null $limit
      *
-     * @return ArrayList
+     * @return ArrayList|null
      */
     public function getPostComments($postId, $limit = null, $order = 'chronological')
     {
