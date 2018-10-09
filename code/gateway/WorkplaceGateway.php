@@ -164,7 +164,10 @@ class WorkplaceGateway
                     'Error in WorkplaceGateway::call(%s). %s',
                     $parameters,
                     $e->getMessage()
-                )
+                ),
+                [
+                    'Body' => $e
+                ]
             );
         } catch (Exeception $e) {
             Injector::inst()->get(LoggerInterface::class)->error(
@@ -172,7 +175,10 @@ class WorkplaceGateway
                     'Error in WorkplaceGateway::call(%s). %s',
                     $parameters,
                     $e->getMessage()
-                )
+                ),
+                [
+                    'Body' => $e
+                ]
             );
         }
 
