@@ -1,4 +1,7 @@
 <?php
+namespace NZTA\Workplace\Services;
+
+use NZTA\Workplace\Gateways\WorkplaceGateway;
 
 /**
  * Provides common calls to the {@link WorkplaceGateway}.
@@ -42,7 +45,7 @@ class WorkplaceService
      * @var array
      */
     private static $dependencies = [
-        'WorkplaceGateway' => '%$WorkplaceGateway'
+        'WorkplaceGateway' => '%$' . WorkplaceGateway::class,
     ];
 
     /**

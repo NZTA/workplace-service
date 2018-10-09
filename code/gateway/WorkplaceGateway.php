@@ -1,4 +1,9 @@
 <?php
+namespace NZTA\Workplace\Gateways;
+
+use SilverStripe\Core\Config\Config;
+use Psr\Log\LoggerInterface;
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * Handles the direct calls to the Workplace API.
@@ -152,28 +157,20 @@ class WorkplaceGateway
                 return null;
             }
 
-            SS_Log::log(
+            Injector::inst()->get(LoggerInterface::class)->error(
                 sprintf(
                     'Error in WorkplaceGateway::call(%s). %s',
                     $parameters,
                     $e->getMessage()
-                ),
-                SS_Log::ERR,
-                [
-                    'Body' => $e
-                ]
+                )
             );
         } catch (Exeception $e) {
-            SS_Log::log(
+            Injector::inst()->get(LoggerInterface::class)->error(
                 sprintf(
                     'Error in WorkplaceGateway::call(%s). %s',
                     $parameters,
                     $e->getMessage()
-                ),
-                SS_Log::ERR,
-                [
-                    'Body' => $e
-                ]
+                )
             );
         }
 
