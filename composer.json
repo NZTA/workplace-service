@@ -1,7 +1,7 @@
 {
     "name": "nzta/silverstripe-workplace",
     "description": "Provides the integration with Workplace facebook service",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "keywords": [
         "silverstripe",
         "facebook"
