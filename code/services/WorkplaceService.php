@@ -1,6 +1,12 @@
 <?php
 namespace NZTA\Workplace\Services;
 
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ArrayData;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\ORM\FieldType\DBText;
+use SilverStripe\Core\Injector\Injector;
 use NZTA\Workplace\Gateways\WorkplaceGateway;
 
 /**
@@ -59,16 +65,13 @@ class WorkplaceService
     public function getHomepagePosts($groupID, $limit = null)
     {
         // get the cache for this service
-        $cache = SS_Cache::factory('WorkplaceService', 'Output', [
-            'automatic_serialization' => true,
-            'lifetime'                => Config::inst()->get('WorkplaceService', 'homepage_feed_lifetime')
-        ]);
+        $cache = Injector::inst()->get(CacheInterface::class . '.nztaWorkplace');
 
         // base cache key on group id and limit specified
         $cacheKey = md5(sprintf('getHomepagePosts-%d-%d', $groupID, $limit));
 
         // attempt to retrieve ArrayList of posts from cache
-        if (!($posts = $cache->load($cacheKey))) {
+        if (!($posts = $cache->get($cacheKey))) {
             $response = $this->WorkplaceGateway->getHomepagePosts($groupID, $limit);
 
             if (!$response) {
@@ -97,7 +100,7 @@ class WorkplaceService
                     $message = strip_tags($message);
 
                     // cast to Text so we can use the helper methods to truncate
-                    $text = Text::create();
+                    $text = DBText::create();
                     $text->setValue($message);
 
                     $posts->push(new ArrayData([
@@ -113,7 +116,7 @@ class WorkplaceService
             }
 
             // otherwise we retrieve the posts and store to the cache as an ArrayList
-            $cache->save($posts, $cacheKey);
+            $cache->set($cacheKey, $posts, Config::inst()->get('WorkplaceService', 'homepage_feed_lifetime'));
         }
 
         return $posts;
@@ -130,15 +133,14 @@ class WorkplaceService
     public function getPostComments($postId, $limit = null, $order = 'chronological')
     {
         // get the cache for this service
-        $cache = SS_Cache::factory('WorkplaceService', 'Output', [
-            'automatic_serialization' => true,
-            'lifetime'                => Config::inst()->get('WorkplaceService', 'post_comments_lifetime')
-        ]);
+        $cache = Injector::inst()->get(CacheInterface::class . '.nztaWorkplace');
+
+
         // base cache key on group id and limit specified
         $cacheKey = md5(sprintf('getPostComments-%d-%d-%s', $postId, $limit, $order));
 
         // attempt to retrieve ArrayList of posts from cache
-        if (!($comments = $cache->load($cacheKey))) {
+        if (!($comments = $cache->get($cacheKey))) {
             $response = $this->WorkplaceGateway->getPostComments($postId, $limit, $order);
 
             if (!$response) {
@@ -168,7 +170,7 @@ class WorkplaceService
                     $message = strip_tags($message);
 
                     // cast to Text so we can use the helper methods to truncate
-                    $text = Text::create();
+                    $text = DBText::create();
                     $text->setValue($message);
 
                     $comments->push(new ArrayData([
@@ -183,7 +185,7 @@ class WorkplaceService
             }
 
             // otherwise we retrieve the posts and store to the cache as an ArrayList
-            $cache->save($comments, $cacheKey);
+            $cache->set($cacheKey, $comments, Config::inst()->get('WorkplaceService', 'post_comments_lifetime'));
         }
 
         return $comments;
@@ -197,13 +199,11 @@ class WorkplaceService
     public function getAllGroups()
     {
         // get the cache for this service
-        $cache = SS_Cache::factory('WorkplaceService', 'Output', [
-            'automatic_serialization' => true,
-            'lifetime'                => Config::inst()->get('WorkplaceService', 'workplace_groups_lifetime')
-        ]);
+        $cache = Injector::inst()->get(CacheInterface::class . '.nztaWorkplace');
         $cacheKey = md5('workplaceGroups');
+
         // attempt to retrieve Array of groups from cache
-        if (!($groups = $cache->load($cacheKey))) {
+        if (!($groups = $cache->get($cacheKey))) {
             $response = $this->WorkplaceGateway->getAllGroups();
             $groups = [];
             $items = json_decode($response)->data;
@@ -214,8 +214,9 @@ class WorkplaceService
                     }
                 }
             }
+
             // otherwise we retrieve the groups and store to the cache as an array
-            $cache->save($groups, $cacheKey);
+            $cache->set($cacheKey, $groups, Config::inst()->get('WorkplaceService', 'workplace_groups_lifetime'));
         }
         return $groups;
 
