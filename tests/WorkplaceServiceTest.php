@@ -22,8 +22,6 @@ class WorkplaceServiceTest extends SapphireTest
     public function setUpOnce()
     {
         parent::setUpOnce();
-
-        Phockito::include_hamcrest();
     }
 
     /**
