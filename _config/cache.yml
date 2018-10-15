@@ -1,0 +1,6 @@
+SilverStripe\Core\Injector\Injector:
+  Psr\SimpleCache\CacheInterface.nztaWorkplace:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: nztaWorkplace
+      defaultLifetime: 60

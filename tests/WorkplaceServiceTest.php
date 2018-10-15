@@ -1,4 +1,10 @@
 <?php
+namespace NZTA\Workplace\Test;
+
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Core\Injector\Injector;
+use NZTA\Workplace\Services\WorkplaceService;
+use SilverStripe\ORM\ArrayList;
 
 class WorkplaceServiceTest extends SapphireTest
 {
@@ -16,8 +22,6 @@ class WorkplaceServiceTest extends SapphireTest
     public function setUpOnce()
     {
         parent::setUpOnce();
-
-        Phockito::include_hamcrest();
     }
 
     /**
@@ -27,8 +31,8 @@ class WorkplaceServiceTest extends SapphireTest
     {
         parent::setUp();
 
-        $this->mockWorkplaceService = Injector::inst()->get('MockWorkplaceService');
-        $this->workplaceService = Injector::inst()->get('WorkplaceService');
+        $this->mockWorkplaceService = Injector::inst()->get(MockWorkplaceService::class);
+        $this->workplaceService = Injector::inst()->get(WorkplaceService::class);
         $this->workplaceService->WorkplaceGateway = $this->mockWorkplaceService->getGateway();
     }
 
@@ -121,7 +125,7 @@ class WorkplaceServiceTest extends SapphireTest
         // in this test return only 1 out of 2 requests
         $this->assertEquals(1, count($response));
 
-        // userID 10 will only return 200 respond 
+        // userID 10 will only return 200 respond
         $firstProfile =  $response[10];
 
         $this->assertTrue(isset($firstProfile->id));

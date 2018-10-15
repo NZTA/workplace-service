@@ -1,4 +1,8 @@
 <?php
+namespace NZTA\Workplace\Jobs;
+
+use Symbiote\QueuedJobs\Services\QueuedJob;
+use Symbiote\QueuedJobs\Services\AbstractQueuedJob;
 
 /**
  * This job will call all every day to get all the groups in the facebook workplace

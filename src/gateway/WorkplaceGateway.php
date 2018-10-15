@@ -1,8 +1,15 @@
 <?php
+namespace NZTA\Workplace\Gateways;
+
+use GuzzleHttp\Client;
+use Psr\Log\LoggerInterface;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * Handles the direct calls to the Workplace API.
- * The calls are made to endpoints using a {@link GuzzleHttp}.
+ * The calls are made to endpoints using a {@link Client}.
  */
 class WorkplaceGateway
 {
@@ -117,7 +124,7 @@ class WorkplaceGateway
      */
     public function call($type, $parameters)
     {
-        $client = new GuzzleHttp\Client([
+        $client = new Client([
             'base_uri' => SS_WORKPLACE_GATEWAY_REST_URL,
             'headers'  => [
                 'Authorization' => sprintf('Bearer %s', SS_WORKPLACE_BEARER_TOKEN)
@@ -143,7 +150,7 @@ class WorkplaceGateway
                 ));
             }
 
-        } catch (GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             $response = json_decode($e->getResponse()->getBody()->getContents());
 
             // Check exception error code is 100 when user not registered with workplace.
@@ -152,25 +159,23 @@ class WorkplaceGateway
                 return null;
             }
 
-            SS_Log::log(
+            Injector::inst()->get(LoggerInterface::class)->error(
                 sprintf(
                     'Error in WorkplaceGateway::call(%s). %s',
                     $parameters,
                     $e->getMessage()
                 ),
-                SS_Log::ERR,
                 [
                     'Body' => $e
                 ]
             );
         } catch (Exeception $e) {
-            SS_Log::log(
+            Injector::inst()->get(LoggerInterface::class)->error(
                 sprintf(
                     'Error in WorkplaceGateway::call(%s). %s',
                     $parameters,
                     $e->getMessage()
                 ),
-                SS_Log::ERR,
                 [
                     'Body' => $e
                 ]
