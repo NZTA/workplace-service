@@ -60,7 +60,7 @@ class GetWorkplaceGroupsJob extends AbstractQueuedJob implements QueuedJob
             $groups = serialize($groups);
 
             // Use a secure folder for storing the workplace group file
-            $folder = Folder::find_or_make(sprintf('/%s/',Config::inst()->get('GetWorkplaceGroupsJob', 'workplace_secure_folder')));
+            $folder = Folder::find_or_make(sprintf('/%s/', Config::inst()->get(GetWorkplaceGroupsJob::class, 'workplace_secure_folder')));
             $folder->CanViewType = 'OnlyTheseUsers';
             $folder->ViewerGroups()->add($this->findAdminGroup());
             $folder->write();

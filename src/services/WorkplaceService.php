@@ -8,6 +8,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\Core\Injector\Injector;
 use NZTA\Workplace\Gateways\WorkplaceGateway;
+use NZTA\Workplace\Jobs\GetWorkplaceGroupsJob;
 
 /**
  * Provides common calls to the {@link WorkplaceGateway}.
@@ -116,7 +117,7 @@ class WorkplaceService
             }
 
             // otherwise we retrieve the posts and store to the cache as an ArrayList
-            $cache->set($cacheKey, $posts, Config::inst()->get('WorkplaceService', 'homepage_feed_lifetime'));
+            $cache->set($cacheKey, $posts, Config::inst()->get(WorkplaceService::class, 'homepage_feed_lifetime'));
         }
 
         return $posts;
@@ -185,7 +186,7 @@ class WorkplaceService
             }
 
             // otherwise we retrieve the posts and store to the cache as an ArrayList
-            $cache->set($cacheKey, $comments, Config::inst()->get('WorkplaceService', 'post_comments_lifetime'));
+            $cache->set($cacheKey, $comments, Config::inst()->get(WorkplaceService::class, 'post_comments_lifetime'));
         }
 
         return $comments;
@@ -216,7 +217,7 @@ class WorkplaceService
             }
 
             // otherwise we retrieve the groups and store to the cache as an array
-            $cache->set($cacheKey, $groups, Config::inst()->get('WorkplaceService', 'workplace_groups_lifetime'));
+            $cache->set($cacheKey, $groups, Config::inst()->get(WorkplaceService::class, 'workplace_groups_lifetime'));
         }
         return $groups;
 
@@ -228,6 +229,7 @@ class WorkplaceService
     public function getWorkplaceGroups()
     {
         $filePath = $this->getWorkplaceGroupsFilePath();
+
         $groups = [];
         if (file_exists($filePath)) {
             $groups = unserialize(file_get_contents($filePath));
@@ -242,8 +244,8 @@ class WorkplaceService
     {
         return sprintf('%s/%s/%s',
             ASSETS_PATH,
-            Config::inst()->get('GetWorkplaceGroupsJob', 'workplace_secure_folder'),
-            Config::inst()->get('GetWorkplaceGroupsJob', 'workplace_group_filename')
+            Config::inst()->get(GetWorkplaceGroupsJob::class, 'workplace_secure_folder'),
+            Config::inst()->get(GetWorkplaceGroupsJob::class, 'workplace_group_filename')
         );
     }
 

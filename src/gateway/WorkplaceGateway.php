@@ -58,7 +58,7 @@ class WorkplaceGateway
         return $this->call('get', sprintf(
             '%d/groups?fields=id,name&limit=%d',
             SS_WORKPLACE_COMMUNITY_ID,
-            Config::inst()->get('WorkplaceGateway', 'workplace_group_limit')
+            Config::inst()->get(WorkplaceGateway::class, 'workplace_group_limit')
         ));
     }
 
@@ -95,7 +95,7 @@ class WorkplaceGateway
         }
 
         $batch = [];
-        $returnFields = Config::inst()->get('WorkplaceGateway', 'workplace_profile_return_fields');
+        $returnFields = Config::inst()->get(WorkplaceGateway::class, 'workplace_profile_return_fields');
 
         // Make a new array and send as a json payload to facebook workplace in the batch request
         // e.g [{"method":"GET", "relative_url":"user@example.org"},{"method":"GET", "relative_url":"user2@example.org?fields=link"}]
