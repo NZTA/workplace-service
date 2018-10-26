@@ -6,6 +6,7 @@ use Psr\Log\LoggerInterface;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use GuzzleHttp\Exception\ClientException;
+use SilverStripe\Core\Environment;
 
 /**
  * Handles the direct calls to the Workplace API.
@@ -57,7 +58,7 @@ class WorkplaceGateway
     {
         return $this->call('get', sprintf(
             '%d/groups?fields=id,name&limit=%d',
-            SS_WORKPLACE_COMMUNITY_ID,
+            Environment::getEnv('SS_WORKPLACE_COMMUNITY_ID'),
             Config::inst()->get(WorkplaceGateway::class, 'workplace_group_limit')
         ));
     }
@@ -125,9 +126,9 @@ class WorkplaceGateway
     public function call($type, $parameters)
     {
         $client = new Client([
-            'base_uri' => SS_WORKPLACE_GATEWAY_REST_URL,
+            'base_uri' => Environment::getEnv('SS_WORKPLACE_GATEWAY_REST_URL'),
             'headers'  => [
-                'Authorization' => sprintf('Bearer %s', SS_WORKPLACE_BEARER_TOKEN)
+                'Authorization' => sprintf('Bearer %s', Environment::getEnv('SS_WORKPLACE_BEARER_TOKEN'))
             ]
         ]);
 
