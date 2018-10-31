@@ -121,7 +121,7 @@ class WorkplaceGateway
      * @param String $parameters The rest parameters to call.
      *
      * @return null|string JSON representation of the response.
-     * @throws Exception
+     * @throws \Exception
      */
     public function call($type, $parameters)
     {
@@ -144,7 +144,7 @@ class WorkplaceGateway
             if ($response->getStatusCode() === 200) {
                 return $response->getBody()->getContents();
             } else {
-                throw new Exception(sprintf(
+                throw new \Exception(sprintf(
                     'StatusCode: %s. StatusDescription: %s.',
                     $response->getStatusCode(),
                     $response->getStatusDescription()
@@ -170,7 +170,7 @@ class WorkplaceGateway
                     'Body' => $e
                 ]
             );
-        } catch (Exeception $e) {
+        } catch (\Exeception $e) {
             Injector::inst()->get(LoggerInterface::class)->error(
                 sprintf(
                     'Error in WorkplaceGateway::call(%s). %s',

@@ -3,6 +3,11 @@ namespace NZTA\Workplace\Jobs;
 
 use Symbiote\QueuedJobs\Services\QueuedJob;
 use Symbiote\QueuedJobs\Services\AbstractQueuedJob;
+use SilverStripe\Assets\Folder;
+use NZTA\Workplace\Services\WorkplaceService;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Security\Permission;
+use Symbiote\QueuedJobs\Services\QueuedJobService;
 
 /**
  * This job will call all every day to get all the groups in the facebook workplace
@@ -31,7 +36,7 @@ class GetWorkplaceGroupsJob extends AbstractQueuedJob implements QueuedJob
      * @var array
      */
     private static $dependencies = [
-        'WorkplaceService' => '%$WorkplaceService'
+        'WorkplaceService' => '%$' . WorkplaceService::class
     ];
 
     /**
@@ -79,7 +84,7 @@ class GetWorkplaceGroupsJob extends AbstractQueuedJob implements QueuedJob
     private function scheduleNextExecution()
     {
         $groupsJob = new GetWorkplaceGroupsJob();
-        singleton('QueuedJobService')->queueJob($groupsJob, date('Y-m-d H:i:s', time() + self::$reschedule_time));
+        singleton(QueuedJobService::class)->queueJob($groupsJob, date('Y-m-d H:i:s', time() + self::$reschedule_time));
     }
 
     /**
