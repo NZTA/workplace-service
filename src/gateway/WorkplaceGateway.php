@@ -39,7 +39,7 @@ class WorkplaceGateway
      *
      * @return null|string
      */
-    public function getHomepagePosts($groupID, $limit)
+    public function getWorkplacePostsFromGroup($groupID, $limit)
     {
         return $this->call('get', sprintf(
             '%d/feed?fields=permalink_url,message,description,formatting,created_time,type,from{name,picture,link}%s',

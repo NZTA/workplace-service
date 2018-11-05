@@ -23,11 +23,11 @@ class WorkplaceService
 {
 
     /**
-     * The cache lifetime for the homepage feed in seconds.
+     * The cache lifetime for the workplace posts feed in seconds.
      *
      * @var integer
      */
-    private static $homepage_feed_lifetime = 60;
+    private static $workplace_posts_feed_lifetime = 60;
 
     /**
      * The cache lifetime for the Workplace comments displayed on pages.
@@ -63,61 +63,26 @@ class WorkplaceService
      *
      * @return ArrayList|null representation of workplace posts.
      */
-    public function getHomepagePosts($groupID, $limit = null)
+    public function getWorkplacePostsFromGroup($groupID, $limit = null)
     {
         // get the cache for this service
         $cache = Injector::inst()->get(CacheInterface::class . '.nztaWorkplace');
 
         // base cache key on group id and limit specified
-        $cacheKey = md5(sprintf('getHomepagePosts-%d-%d', $groupID, $limit));
+        $cacheKey = md5(sprintf('getWorkplacePostsFromGroup-%d-%d', $groupID, $limit));
 
         // attempt to retrieve ArrayList of posts from cache
         if (!($posts = $cache->get($cacheKey))) {
-            $response = $this->WorkplaceGateway->getHomepagePosts($groupID, $limit);
+            $response = $this->WorkplaceGateway->getWorkplacePostsFromGroup($groupID, $limit);
 
             if (!$response) {
                 return null;
             }
 
-            $posts = new ArrayList();
-            $items = json_decode($response)->data;
-
-            if (is_array($items)) {
-                foreach ($items as $item) {
-                    $message = isset($item->message) ? $item->message : '';
-
-                    // fall back to the description if available (useful for posts that are shared to the group)
-                    if (!$message && isset($item->description)) {
-                        $message = $item->description;
-                    }
-
-                    // when no message or description, we assume empty post with just attachment,
-                    // either a video, photo or link, so use a generic message
-                    if (!$message && isset($item->type)) {
-                        $message = sprintf('Check out this %s', $item->type);
-                    }
-
-                    // remove all the html tags from message
-                    $message = strip_tags($message);
-
-                    // cast to Text so we can use the helper methods to truncate
-                    $text = DBText::create();
-                    $text->setValue($message);
-
-                    $posts->push(new ArrayData([
-                        'ID'                 => isset($item->id) ? $item->id : '',
-                        'Message'            => $text,
-                        'Link'               => isset($item->permalink_url) ? $item->permalink_url : '',
-                        'ProfileName'        => isset($item->from->name) ? $item->from->name : '',
-                        'ProfilePictureLink' => isset($item->from->picture->data->url) ? $item->from->picture->data->url : '',
-                        'ProfileLink'        => isset($item->from->link) ? $item->from->link : '',
-                        'CreatedTime'        => isset($item->created_time) ? $item->created_time : ''
-                    ]));
-                }
-            }
+            return $response;
 
             // otherwise we retrieve the posts and store to the cache as an ArrayList
-            $cache->set($cacheKey, $posts, Config::inst()->get(WorkplaceService::class, 'homepage_feed_lifetime'));
+            $cache->set($cacheKey, $response, Config::inst()->get(WorkplaceService::class, 'workplace_posts_feed_lifetime'));
         }
 
         return $posts;
