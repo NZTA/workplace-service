@@ -133,10 +133,23 @@ class WorkplaceGateway
         ]);
 
         try {
+            $proxy = [];
+
+            if (Environment::getEnv('SS_OUTBOUND_PROXY') && Environment::getEnv('SS_OUTBOUND_PROXY_PORT')) {
+                $proxy = Environment::getEnv('SS_OUTBOUND_PROXY');
+                $proxyPort = Environment::getEnv('SS_OUTBOUND_PROXY_PORT');
+                $proxy = [
+                    'proxy' => [
+                        'http'  => sprintf('tcp://%s:%s', $proxy, $proxyPort), // Use this proxy with "http"
+                        'https' => sprintf('tcp://%s:%s', $proxy, $proxyPort), // Use this proxy with "https",
+                    ],
+                ];
+            }
+
             if ($type == 'get') {
-                $response = $client->get($parameters);
+                $response = $client->get($parameters, $proxy);
             } elseif ($type == 'post') {
-                $response = $client->post($parameters);
+                $response = $client->post($parameters, $proxy);
             } else {
                 return null;
             }
