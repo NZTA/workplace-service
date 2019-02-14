@@ -145,7 +145,8 @@ class WorkplaceService
                         'Message'            => $text,
                         'ProfileName'        => isset($item->from->name) ? $item->from->name : '',
                         'ProfilePictureLink' => isset($item->from->picture->data->url) ? $item->from->picture->data->url : '',
-                        'ProfileLink'        => isset($item->from->link) ? $item->from->link : ''
+                        'ProfileLink'        => isset($item->from->link) ? $item->from->link : '',
+                        'ProfileID'          => isset($item->from->id) ? $item->from->id : '',
                     ]));
                 }
             }
