@@ -16,10 +16,11 @@ class WorkplaceGateway
 {
     /**
      * The amount of groups that will received from Workplace
-     *
+     * The number is keep growing in 2019, there are 348 groups
+     * 
      * @var integer
      */
-    private static $workplace_group_limit = 300;
+    private static $workplace_group_limit = 500;
 
     /**
      * Define return fields from workplace
@@ -140,8 +141,8 @@ class WorkplaceGateway
                 $proxyPort = Environment::getEnv('SS_OUTBOUND_PROXY_PORT');
                 $proxy = [
                     'proxy' => [
-                        'http'  => sprintf('tcp://%s:%s', $proxy, $proxyPort), // Use this proxy with "http"
-                        'https' => sprintf('tcp://%s:%s', $proxy, $proxyPort), // Use this proxy with "https",
+                        'http'  => sprintf('%s:%s', $proxy, $proxyPort), // Use this proxy with "http"
+                        'https' => sprintf('%s:%s', $proxy, $proxyPort), // Use this proxy with "https",
                     ],
                 ];
             }
